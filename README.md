@@ -99,22 +99,20 @@ Follow the on-screen menu to use the available features.
 
 ## Project Structure
 
-```text
 AirlineReservationSystem/
-├── src/
-│   └── main/
-│       └── java/
-│           ├── Main.java
-│           ├── model/
-│           ├── dao/
-│           ├── service/
-│           └── util/
-├── sql/
-│   └── database.sql
-├── pom.xml
-├── README.md
-└── .gitignore
-```
+|-- src/
+|   `-- main/
+|       `-- java/
+|           |-- Main.java
+|           |-- model/
+|           |-- dao/
+|           |-- service/
+|           `-- util/
+|-- sql/
+|   `-- database.sql
+|-- pom.xml
+|-- README.md
+`-- .gitignore
 
 The `model`, `dao`, `service`, and `util` packages separate data models, database access, business operations, and utility functionality.
 
