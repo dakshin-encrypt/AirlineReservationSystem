@@ -1,0 +1,1111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#102b5c">
+  <meta name="description" content="SkyBook academic airline reservation system for flight search, passenger registration, seat selection and booking management.">
+  <title>SkyBook | Airline Reservation System</title>
+
+  <style>
+    :root {
+      --navy: #102b5c;
+      --blue: #245be8;
+      --pale: #edf3ff;
+      --ink: #18233b;
+      --muted: #65718a;
+      --border: #e0e6f0;
+      --white: #ffffff;
+      --green: #16734b;
+      --red: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: #f5f7fc;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+
+    .topbar {
+      min-height: 76px;
+      padding: 12px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      color: white;
+      background: var(--blue);
+      border-radius: 13px;
+      font-size: 23px;
+    }
+
+    .nav-note { color: var(--muted); font-size: 14px; }
+
+    .hero {
+      padding: 58px 7% 100px;
+      color: white;
+      background:
+        radial-gradient(ellipse at 90% 10%, #416ce9 0, transparent 38%),
+        linear-gradient(120deg, #10234d, #1746a2);
+    }
+
+    .eyebrow {
+      color: #c9d8ff;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 660px;
+      margin: 15px 0;
+      font-size: clamp(34px, 5vw, 55px);
+      line-height: 1.12;
+    }
+
+    .hero p {
+      max-width: 560px;
+      color: #e0e8ff;
+      line-height: 1.7;
+    }
+
+    .search-panel {
+      max-width: 1100px;
+      margin: -58px auto 0;
+      position: relative;
+      width: 86%;
+      padding: 27px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 18px 55px #1d37651a;
+    }
+
+    .search-title { margin: 0 0 20px; font-size: 19px; }
+
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 15px;
+      align-items: end;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 14px;
+      border: 1px solid #d7dfed;
+      border-radius: 10px;
+      outline: none;
+      background: #fbfcff;
+      color: var(--ink);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px #245be81c;
+    }
+
+    .primary {
+      padding: 14px 22px;
+      border: 0;
+      border-radius: 10px;
+      color: white;
+      background: var(--blue);
+      font-weight: 700;
+    }
+
+    .primary:hover { background: #1747c8; }
+
+    .secondary {
+      padding: 11px 15px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--navy);
+      background: white;
+      font-weight: 650;
+    }
+
+    .secondary:hover { background: #f5f7fc; }
+
+    .content {
+      max-width: 1100px;
+      width: 86%;
+      margin: 44px auto 55px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    h2 { margin: 0 0 7px; font-size: 25px; }
+
+    .subheading {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    #status {
+      margin-bottom: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .flight-list { display: grid; gap: 15px; }
+
+    .flight-card {
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: white;
+      transition: box-shadow .2s, transform .2s;
+    }
+
+    .flight-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px #102b5c0c;
+    }
+
+    .flight-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 23px;
+    }
+
+    .airline { font-weight: 800; font-size: 17px; }
+
+    .flight-number {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      padding: 7px 11px;
+      border-radius: 30px;
+      background: var(--pale);
+      color: #2452bd;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .journey {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .place:last-child { text-align: right; }
+
+    .place-code {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 800;
+      color: var(--navy);
+      overflow-wrap: anywhere;
+    }
+
+    .place-time {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .route {
+      min-width: 80px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .route-line {
+      position: relative;
+      margin: 9px 0;
+      border-top: 2px dashed #bdc9df;
+    }
+
+    .route-line span {
+      position: absolute;
+      top: -13px;
+      left: calc(50% - 10px);
+      padding: 0 3px;
+      background: white;
+      color: var(--blue);
+      font-size: 18px;
+    }
+
+    .flight-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 23px;
+      padding-top: 17px;
+      border-top: 1px solid #edf0f6;
+    }
+
+    .available { color: var(--green); font-size: 13px; font-weight: 700; }
+
+    .empty {
+      padding: 35px 20px;
+      border: 1px dashed #cbd5e5;
+      border-radius: 15px;
+      background: white;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .error { color: var(--red) !important; }
+    .success { color: var(--green) !important; }
+
+    .panel {
+      max-width: 1100px;
+      width: 86%;
+      margin: 0 auto 45px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: white;
+      box-shadow: 0 12px 35px #1d37650a;
+    }
+
+    .panel-intro {
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .message {
+      min-height: 22px;
+      margin: 15px 0 0;
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .history-list { margin-top: 20px; }
+
+    .booking-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .booking-details { flex: 1; min-width: 200px; }
+
+    .booking-details strong { color: var(--navy); }
+
+    .booking-details p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .booking-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer {
+      padding: 26px 7%;
+      border-top: 1px solid var(--border);
+      background: white;
+      color: var(--muted);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 680px) {
+      .topbar { padding: 12px 5%; }
+      .brand { font-size: 20px; }
+      .nav-note { font-size: 12px; }
+      .hero { padding: 45px 6% 85px; }
+      .search-panel, .content, .panel { width: 92%; }
+      .search-panel, .panel { padding: 20px; }
+      .search-grid, .form-grid { grid-template-columns: 1fr; }
+      .search-grid .primary { width: 100%; }
+      .content { margin-top: 34px; }
+      .flight-card { padding: 17px; }
+      .route { min-width: 52px; font-size: 10px; }
+      .flight-bottom { align-items: flex-start; flex-direction: column; }
+      .section-heading { align-items: flex-start; }
+      .booking-row { align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">✈</span>
+      <span>SkyBook</span>
+    </div>
+    <div class="nav-note">Airline Reservation System</div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Your journey starts here</div>
+    <h1>Find your next flight.</h1>
+    <p>
+      Search available flights, register passengers, select seats,
+      and manage reservations in one place.
+    </p>
+  </section>
+
+  <section class="search-panel" aria-labelledby="searchTitle">
+    <h2 class="search-title" id="searchTitle">Search flights</h2>
+    <form id="searchForm" class="search-grid">
+      <div>
+        <label for="source">From</label>
+        <input id="source" name="source" placeholder="e.g. Chennai"
+               maxlength="100" required>
+      </div>
+      <div>
+        <label for="destination">To</label>
+        <input id="destination" name="destination" placeholder="e.g. Delhi"
+               maxlength="100" required>
+      </div>
+      <button class="primary" type="submit">Search flights →</button>
+    </form>
+  </section>
+
+  <main class="content" id="availableFlights">
+    <div class="section-heading">
+      <div>
+        <h2 id="resultsTitle">Available flights</h2>
+        <p class="subheading">
+          Flight information retrieved from your project database.
+        </p>
+      </div>
+      <button id="allFlights" class="secondary" type="button">Show all</button>
+    </div>
+    <div id="status" role="status" aria-live="polite">
+      Connecting to the flight database…
+    </div>
+    <div id="flightList" class="flight-list"></div>
+  </main>
+
+  <section class="panel" id="passengerRegistration">
+    <h2>Passenger registration</h2>
+    <p class="panel-intro">
+      Register a passenger before making a reservation.
+      Use fictional details for development testing.
+    </p>
+
+    <form id="registrationForm">
+      <div class="form-grid">
+        <div>
+          <label for="passengerName">Full name</label>
+          <input id="passengerName" name="name" autocomplete="name"
+                 maxlength="100" placeholder="Enter full name" required>
+        </div>
+        <div>
+          <label for="passengerEmail">Email address</label>
+          <input id="passengerEmail" name="email" type="email"
+                 autocomplete="email" maxlength="150"
+                 placeholder="you@example.com" required>
+        </div>
+        <div>
+          <label for="passengerPhone">Phone number</label>
+          <input id="passengerPhone" name="phone" type="tel"
+                 autocomplete="tel" maxlength="20"
+                 placeholder="Enter phone number" required>
+        </div>
+        <div>
+          <label for="passportNumber">Passport number</label>
+          <input id="passportNumber" name="passportNumber"
+                 maxlength="30" autocomplete="off"
+                 placeholder="Enter passport number" required>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button id="registerButton" class="primary" type="submit">
+          Register passenger →
+        </button>
+      </div>
+      <p id="registrationStatus" class="message" role="status"
+         aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="panel" id="ticketBooking">
+    <h2>Book your flight</h2>
+    <p class="panel-intro">
+      Enter a registered passenger ID, select a flight and an available seat,
+      then confirm the reservation.
+    </p>
+
+    <form id="bookingForm">
+      <div class="form-grid">
+        <div>
+          <label for="bookingPassenger">Passenger ID</label>
+          <input id="bookingPassenger" name="passengerId" type="number"
+                 min="1" step="1" placeholder="Enter passenger ID" required>
+          <p class="hint">Use the ID returned after registration.</p>
+        </div>
+        <div>
+          <label for="bookingFlight">Flight</label>
+          <select id="bookingFlight" name="flightId" required>
+            <option value="">Loading flights…</option>
+          </select>
+        </div>
+        <div>
+          <label for="bookingSeat">Available seat</label>
+          <select id="bookingSeat" name="seatId" required disabled>
+            <option value="">Select a flight first</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button id="bookTicketButton" class="primary" type="submit">
+          Confirm booking →
+        </button>
+        <button id="refreshSeats" class="secondary" type="button">
+          Refresh seats
+        </button>
+      </div>
+      <p id="bookingMessage" class="message" role="status"
+         aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section class="panel" id="bookingHistory">
+    <div class="section-heading">
+      <div>
+        <h2>Booking history</h2>
+        <p class="subheading">
+          Review reservations and cancel confirmed bookings.
+        </p>
+      </div>
+      <button id="refreshBookings" class="secondary" type="button">
+        Refresh bookings
+      </button>
+    </div>
+    <div id="bookingList" class="history-list" aria-live="polite">
+      <p class="subheading">Loading bookings…</p>
+    </div>
+    <p id="historyMessage" class="message" role="status"
+       aria-live="polite"></p>
+  </section>
+
+  <footer>
+    <strong>SkyBook</strong> · Academic Airline Reservation System Project<br>
+    Demonstration application. Not affiliated with a real airline.
+  </footer>
+
+  <script>
+    "use strict";
+
+    const $ = id => document.getElementById(id);
+
+    const flightList = $("flightList");
+    const statusBox = $("status");
+    const resultsTitle = $("resultsTitle");
+
+    const registrationForm = $("registrationForm");
+    const registrationStatus = $("registrationStatus");
+    const registerButton = $("registerButton");
+
+    const bookingForm = $("bookingForm");
+    const bookingPassenger = $("bookingPassenger");
+    const bookingFlight = $("bookingFlight");
+    const bookingSeat = $("bookingSeat");
+    const bookingMessage = $("bookingMessage");
+    const bookTicketButton = $("bookTicketButton");
+
+    const bookingList = $("bookingList");
+    const historyMessage = $("historyMessage");
+
+    let flightsCache = [];
+    let flightRequestVersion = 0;
+    let seatRequestVersion = 0;
+    let registrationInProgress = false;
+    let bookingInProgress = false;
+
+    function setMessage(element, message, type = "") {
+      element.className = "message" + (type ? " " + type : "");
+      element.textContent = message;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      })[char]);
+    }
+
+    function formatDateTime(value) {
+      if (!value) return "Time unavailable";
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) {
+        return escapeHtml(value);
+      }
+
+      return date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true
+      });
+    }
+
+    async function apiRequest(url, options = {}) {
+      const headers = {
+        Accept: "application/json",
+        ...(options.headers || {})
+      };
+
+      const response = await fetch(url, { ...options, headers });
+      const raw = await response.text();
+
+      let data = {};
+      if (raw) {
+        try {
+          data = JSON.parse(raw);
+        } catch {
+          throw new Error(
+            `The server returned an unexpected response (HTTP ${response.status}).`
+          );
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || data.message ||
+          `Request failed with HTTP ${response.status}.`
+        );
+      }
+
+      return data;
+    }
+
+    function renderFlights(flights) {
+      flightList.replaceChildren();
+
+      if (!Array.isArray(flights) || flights.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent =
+          "No flights found. Try another route or select Show all.";
+        flightList.appendChild(empty);
+        return;
+      }
+
+      for (const flight of flights) {
+        const card = document.createElement("article");
+        card.className = "flight-card";
+
+        const availableSeats = Number(flight.availableSeats) || 0;
+
+        card.innerHTML = `
+          <div class="flight-top">
+            <div>
+              <div class="airline">${escapeHtml(flight.airlineName)}</div>
+              <div class="flight-number">${escapeHtml(flight.flightNumber)}</div>
+            </div>
+            <span class="pill">${availableSeats} seats available</span>
+          </div>
+
+          <div class="journey">
+            <div class="place">
+              <div class="place-code">${escapeHtml(flight.source)}</div>
+              <div class="place-time">${formatDateTime(flight.departureTime)}</div>
+            </div>
+            <div class="route">
+              <div>Flight route</div>
+              <div class="route-line"><span>✈</span></div>
+              <div>Direct route</div>
+            </div>
+            <div class="place">
+              <div class="place-code">${escapeHtml(flight.destination)}</div>
+              <div class="place-time">${formatDateTime(flight.arrivalTime)}</div>
+            </div>
+          </div>
+
+          <div class="flight-bottom">
+            <span class="available">
+              ${availableSeats > 0 ? "● Seats available" : "● No seats available"}
+            </span>
+            <span class="subheading">Flight ID: ${Number(flight.flightId)}</span>
+          </div>
+        `;
+
+        const chooseButton = document.createElement("button");
+        chooseButton.type = "button";
+        chooseButton.className = "secondary";
+        chooseButton.style.marginTop = "16px";
+        chooseButton.textContent = "Select this flight";
+        chooseButton.disabled = availableSeats <= 0;
+
+        chooseButton.addEventListener("click", async () => {
+          bookingFlight.value = String(flight.flightId);
+          $("ticketBooking").scrollIntoView({ behavior: "smooth" });
+          await refreshSeatChoices();
+        });
+
+        card.appendChild(chooseButton);
+        flightList.appendChild(card);
+      }
+    }
+
+    async function loadFlights(url, title) {
+      const requestVersion = ++flightRequestVersion;
+
+      statusBox.classList.remove("error");
+      statusBox.textContent = "Loading flights from MySQL…";
+      resultsTitle.textContent = title;
+
+      try {
+        const flights = await apiRequest(url);
+
+        if (requestVersion !== flightRequestVersion) return;
+
+        if (!Array.isArray(flights)) {
+          throw new Error("Unexpected flight data received.");
+        }
+
+        if (url === "/api/flights") {
+          flightsCache = flights;
+          updateFlightOptions();
+        }
+
+        renderFlights(flights);
+        statusBox.textContent =
+          `${flights.length} flight(s) returned by the Java API.`;
+      } catch (error) {
+        if (requestVersion !== flightRequestVersion) return;
+
+        statusBox.classList.add("error");
+        statusBox.textContent =
+          `Could not load flights. ${error.message}`;
+
+        flightList.innerHTML = `
+          <div class="empty">
+            <strong>Unable to load flights</strong>
+            <div>Check the Java server and MySQL connection, then refresh.</div>
+          </div>`;
+      }
+    }
+
+    function updateFlightOptions() {
+      const selectedValue = bookingFlight.value;
+      bookingFlight.replaceChildren(new Option("Choose a flight", ""));
+
+      for (const flight of flightsCache) {
+        const seats = Number(flight.availableSeats) || 0;
+        const label =
+          `${flight.flightNumber} — ${flight.source} to ${flight.destination}` +
+          ` (${seats} available)`;
+
+        const option = new Option(label, String(flight.flightId));
+        option.disabled = seats <= 0;
+        bookingFlight.add(option);
+      }
+
+      if ([...bookingFlight.options].some(
+        option => option.value === selectedValue && !option.disabled
+      )) {
+        bookingFlight.value = selectedValue;
+      }
+    }
+
+    async function refreshSeatChoices() {
+      const requestVersion = ++seatRequestVersion;
+      const flightId = bookingFlight.value;
+
+      bookingSeat.disabled = true;
+      bookingSeat.replaceChildren(
+        new Option(flightId ? "Loading seats…" : "Select a flight first", "")
+      );
+
+      if (!flightId) return;
+
+      try {
+        const seats = await apiRequest(
+          `/api/seats?flightId=${encodeURIComponent(flightId)}`
+        );
+
+        if (requestVersion !== seatRequestVersion) return;
+
+        if (!Array.isArray(seats)) {
+          throw new Error("Unexpected seat data received.");
+        }
+
+        const availableSeats = seats.filter(seat => !seat.booked);
+
+        bookingSeat.replaceChildren(new Option("Choose a seat", ""));
+
+        for (const seat of availableSeats) {
+          const option = new Option(
+            `${seat.seatNumber} — ${seat.seatClass}`,
+            String(seat.seatId)
+          );
+          bookingSeat.add(option);
+        }
+
+        if (availableSeats.length === 0) {
+          bookingSeat.replaceChildren(new Option("No seats available", ""));
+          setMessage(bookingMessage, "No available seats were found for this flight.", "error");
+        } else {
+          bookingSeat.disabled = false;
+          setMessage(
+            bookingMessage,
+            `${availableSeats.length} available seat(s) found.`
+          );
+        }
+      } catch (error) {
+        if (requestVersion !== seatRequestVersion) return;
+
+        bookingSeat.replaceChildren(new Option("Could not load seats", ""));
+        setMessage(bookingMessage, error.message, "error");
+      }
+    }
+
+    $("searchForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const source = $("source").value.trim();
+      const destination = $("destination").value.trim();
+
+      if (!source || !destination) return;
+
+      const query = new URLSearchParams({ source, destination });
+      loadFlights(
+        "/api/flights/search?" + query.toString(),
+        `${source} → ${destination}`
+      );
+    });
+
+    $("allFlights").addEventListener("click", () => {
+      loadFlights("/api/flights", "Available flights");
+    });
+
+    // Passenger registration.
+    registrationForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (registrationInProgress) return;
+      registrationInProgress = true;
+      registerButton.disabled = true;
+      setMessage(registrationStatus, "Registering passenger…");
+
+      try {
+        const formData = new FormData(registrationForm);
+        const body = new URLSearchParams();
+
+        for (const [key, value] of formData.entries()) {
+          body.append(key, String(value).trim());
+        }
+
+        const result = await apiRequest("/api/passengers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          body: body.toString()
+        });
+
+        const passengerId =
+          result.passengerId ??
+          result.id ??
+          result.passenger?.passengerId ??
+          result.passenger?.id;
+
+        registrationForm.reset();
+
+        if (passengerId != null && Number(passengerId) > 0) {
+          bookingPassenger.value = String(passengerId);
+          setMessage(
+            registrationStatus,
+            `${result.message || "Passenger registered successfully."} ` +
+            `Passenger ID: ${passengerId}. This ID has been filled into the booking form.`,
+            "success"
+          );
+        } else {
+          setMessage(
+            registrationStatus,
+            (result.message || "Passenger registered successfully.") +
+            " Check the registration response or database for the passenger ID, then enter it in the booking form.",
+            "success"
+          );
+        }
+      } catch (error) {
+        setMessage(registrationStatus, error.message, "error");
+      } finally {
+        registrationInProgress = false;
+        registerButton.disabled = false;
+      }
+    });
+
+    // Flight selection and seat availability.
+    bookingFlight.addEventListener("change", refreshSeatChoices);
+    $("refreshSeats").addEventListener("click", refreshSeatChoices);
+
+    // Create a reservation.
+    bookingForm.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (bookingInProgress) return;
+
+      const passengerId = bookingPassenger.value.trim();
+      const flightId = bookingFlight.value;
+      const seatId = bookingSeat.value;
+
+      if (!passengerId || !Number.isSafeInteger(Number(passengerId)) ||
+          Number(passengerId) < 1 || !flightId || !seatId) {
+        setMessage(
+          bookingMessage,
+          "Enter a valid passenger ID and select a flight and an available seat.",
+          "error"
+        );
+        return;
+      }
+
+      bookingInProgress = true;
+      bookTicketButton.disabled = true;
+      setMessage(bookingMessage, "Processing your reservation…");
+
+      try {
+        const body = new URLSearchParams({
+          passengerId,
+          flightId,
+          seatId
+        });
+
+        const result = await apiRequest("/api/bookings/create", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          body: body.toString()
+        });
+
+        setMessage(
+          bookingMessage,
+          `${result.message || "Ticket booked successfully."}` +
+          (result.bookingId != null ? ` Booking ID: ${result.bookingId}.` : ""),
+          "success"
+        );
+
+        await Promise.all([
+          refreshBookingHistory(),
+          refreshSeatChoices(),
+          loadFlights("/api/flights", "Available flights")
+        ]);
+      } catch (error) {
+        setMessage(bookingMessage, error.message, "error");
+        await refreshSeatChoices();
+      } finally {
+        bookingInProgress = false;
+        bookTicketButton.disabled = false;
+      }
+    });
+
+    // Booking history and cancellation.
+    async function refreshBookingHistory() {
+      bookingList.replaceChildren();
+      const loading = document.createElement("p");
+      loading.className = "subheading";
+      loading.textContent = "Loading bookings…";
+      bookingList.appendChild(loading);
+      setMessage(historyMessage, "");
+
+      try {
+        const bookings = await apiRequest("/api/bookings");
+
+        if (!Array.isArray(bookings)) {
+          throw new Error("Unexpected booking data received.");
+        }
+
+        bookingList.replaceChildren();
+
+        if (bookings.length === 0) {
+          const empty = document.createElement("div");
+          empty.className = "empty";
+          empty.textContent = "No bookings found.";
+          bookingList.appendChild(empty);
+          return;
+        }
+
+        for (const booking of bookings) {
+          const row = document.createElement("article");
+          row.className = "booking-row";
+
+          const details = document.createElement("div");
+          details.className = "booking-details";
+
+          const heading = document.createElement("strong");
+          heading.textContent = `Booking #${booking.bookingId}`;
+
+          const passenger = document.createElement("p");
+          passenger.textContent = `Passenger ID: ${booking.passengerId}`;
+
+          const flight = document.createElement("p");
+          flight.textContent =
+            `Flight ID: ${booking.flightId} · Seat ID: ${booking.seatId}`;
+
+          const date = document.createElement("p");
+          date.textContent =
+            `Booking date: ${booking.bookingDate || "Not available"}`;
+
+          const status = document.createElement("p");
+          status.textContent = `Status: ${booking.bookingStatus}`;
+
+          details.append(heading, passenger, flight, date, status);
+          row.appendChild(details);
+
+          if (booking.bookingStatus === "CONFIRMED") {
+            const actions = document.createElement("div");
+            actions.className = "booking-actions";
+
+            const cancelButton = document.createElement("button");
+            cancelButton.type = "button";
+            cancelButton.className = "secondary";
+            cancelButton.textContent = "Cancel booking";
+
+            cancelButton.addEventListener("click", async () => {
+              const confirmed = window.confirm(
+                `Are you sure you want to cancel booking #${booking.bookingId}?`
+              );
+
+              if (!confirmed) return;
+
+              cancelButton.disabled = true;
+              setMessage(historyMessage, "Cancelling booking…");
+
+              try {
+                const result = await apiRequest(
+                  `/api/bookings/${encodeURIComponent(booking.bookingId)}`,
+                  { method: "DELETE" }
+                );
+
+                setMessage(
+                  historyMessage,
+                  result.message || "Booking cancelled successfully.",
+                  "success"
+                );
+
+                await refreshBookingHistory();
+                await refreshSeatChoices();
+                await loadFlights("/api/flights", "Available flights");
+              } catch (error) {
+                setMessage(historyMessage, error.message, "error");
+                cancelButton.disabled = false;
+              }
+            });
+
+            actions.appendChild(cancelButton);
+            row.appendChild(actions);
+          }
+
+          bookingList.appendChild(row);
+        }
+      } catch (error) {
+        bookingList.replaceChildren();
+        const errorText = document.createElement("p");
+        errorText.className = "error";
+        errorText.textContent = `Could not load bookings: ${error.message}`;
+        bookingList.appendChild(errorText);
+      }
+    }
+
+    $("refreshBookings").addEventListener("click", refreshBookingHistory);
+
+    // Initial page load.
+    async function initializePage() {
+      // loadFlights() also updates the booking flight dropdown via updateFlightOptions().
+      await Promise.all([
+        loadFlights("/api/flights", "Available flights"),
+        refreshBookingHistory()
+      ]);
+
+      await refreshSeatChoices();
+    }
+
+    initializePage().catch(error => {
+      setMessage(bookingMessage, error.message, "error");
+    });
+  </script>
+</body>
+</html>
