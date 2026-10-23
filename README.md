@@ -1,39 +1,66 @@
-# Airline Reservation System
+# SkyBook — Airline Reservation System
 
-A console-based Airline Reservation System built using Java, Object-Oriented Programming (OOP), Java Collections, JDBC, and MySQL. The application manages passengers, flights, seat availability, ticket bookings, and cancellations through a menu-driven interface.
+A Java-based Airline Reservation System built using Object-Oriented Programming (OOP), the Java Collections Framework, JDBC, and MySQL. The project provides a console-based application and a browser-based web interface for managing passengers, searching flights, checking seat availability, booking tickets, viewing bookings, and cancelling reservations.
 
 ## Features
 
-- **Passenger Management:** Add and view passenger records.
-- **Flight Management:** View flights and search for flights.
-- **Seat Management:** Check seat availability for a selected flight.
-- **Ticket Booking:** Book an available seat for a passenger.
-- **Booking Management:** View booking records and cancel confirmed bookings.
-- **Database Integration:** Store and retrieve information using JDBC and MySQL.
-- **Booking Consistency:** Update booking status, seat availability, and flight availability during booking and cancellation.
+### Flight Management
+- View available flight records.
+- Search flights by source and destination.
+- Display flight details, including airline, departure, arrival, and seat availability.
+
+### Passenger Management
+- Register passengers with their name, email, phone number, and passport number.
+- Validate required passenger information.
+- Store passenger records in MySQL.
+
+### Seat Management
+- View seats for a selected flight.
+- Display seat numbers, classes, and booking status.
+- Prevent booking attempts when a seat is unavailable through the booking workflow.
+
+### Booking Management
+- Book a seat for a registered passenger.
+- View booking history and booking status.
+- Cancel eligible bookings.
+- Update seat and flight availability during booking and cancellation.
+
+### Web Interface
+- Browse the application using a web browser.
+- Search for flights.
+- Register passengers.
+- Select flights and seats for booking.
+- View booking history and cancel bookings.
+
+### Database Integration
+- Use JDBC to connect Java components to MySQL.
+- Store passengers, flights, seats, and bookings in a relational database.
+- Read database credentials from environment variables instead of hardcoding passwords in the source code.
 
 ## Technologies Used
 
 - Java 26
 - Object-Oriented Programming (OOP)
 - Java Collections Framework
-- JDBC (Java Database Connectivity)
+- JDBC
 - MySQL 8.4
 - MySQL Connector/J 9.5.0
-- Apache Maven
+- Apache Maven 3.10.0
 - Git and GitHub
 - Visual Studio Code
+- Java's built-in HTTP server for the web interface
+- HTML, CSS, and JavaScript
 
 ## Prerequisites
 
-Install the following before running the application:
+Install the following software before running the project:
 
 - JDK 26
 - Apache Maven
 - MySQL Server
-- MySQL Workbench (optional, for database management)
+- MySQL Workbench (optional)
 
-Verify Java and Maven installations:
+Verify the Java and Maven installations:
 
 ```powershell
 java --version
@@ -43,19 +70,21 @@ mvn --version
 
 ## Database Setup
 
-1. Start your MySQL server.
+1. Start the MySQL server.
 2. Open MySQL Workbench or another MySQL client.
 3. Open `sql/database.sql`.
-4. Review the script and execute it to create the database and tables.
+4. Review the SQL script and execute it.
 5. Confirm that the `airline_reservation` database and its required tables exist.
 
-**Important:** The schema script creates the database structure. It does not necessarily populate sample passengers, flights, or seats. Use the application's supported workflows or a separately reviewed seed script to add test data.
+The schema script establishes the database structure. It may not populate sample passengers, flights, or seats. Add suitable test data before testing workflows that require existing records.
 
-## Database Credentials
+**Important:** Review the SQL script before executing it, especially if your database already contains project data.
 
-The application reads database credentials from environment variables instead of storing passwords in the source code.
+## Database Configuration
 
-In PowerShell, set the credentials for the current terminal session:
+SkyBook reads the database username and password from environment variables.
+
+Open PowerShell in the project root and configure the variables for the current terminal session:
 
 ```powershell
 $env:AIRLINE_DB_USER = "root"
@@ -63,27 +92,29 @@ $securePassword = Read-Host "Enter your MySQL password" -AsSecureString
 $env:AIRLINE_DB_PASSWORD = [System.Net.NetworkCredential]::new("", $securePassword).Password
 ```
 
-Replace `root` with your MySQL username if you use a different account. Enter your password only at the secure prompt; do not commit passwords to GitHub.
+Replace `root` with your MySQL username if necessary. Enter your password only at the prompt; do not write it into Java source files or commit it to GitHub.
 
-These environment variables apply to the current PowerShell session. Set them again in a new terminal when necessary.
+These environment variables apply to the current PowerShell session. If you open a new terminal, configure them again.
 
-## Build and Run
+## Build the Project
 
-Open PowerShell in the project root directory and compile the project:
+From the project root directory, run:
 
 ```powershell
 mvn clean compile
 ```
 
-Run the console application:
+The command compiles the Java source files and copies the application resources into the build output directory.
+
+## Run the Console Application
+
+Start the menu-driven application using:
 
 ```powershell
 mvn exec:java "-Dexec.mainClass=Main"
 ```
 
-Follow the on-screen menu to use the available features.
-
-## Application Menu
+The console menu provides the following operations:
 
 | Option | Operation |
 |---|---|
@@ -97,43 +128,110 @@ Follow the on-screen menu to use the available features.
 | 8 | Cancel Booking |
 | 0 | Exit |
 
+Follow the prompts displayed in the terminal.
+
+## Run the SkyBook Web Application
+
+First, configure the database environment variables in the current PowerShell session and ensure that MySQL is running.
+
+Start the web server with:
+
+```powershell
+mvn exec:java "-Dexec.mainClass=WebServer" "-Dexec.classpathScope=runtime"
+```
+
+When the server starts successfully, open the following address in your browser:
+
+**http://localhost:8080**
+
+The web server binds to `127.0.0.1`, making the application available locally on your machine.
+
+Keep the terminal open while using the website. Press `Ctrl+C` in the server terminal to stop it.
+
+## API Endpoints
+
+The web interface communicates with the Java server through HTTP endpoints.
+
+| Method | Endpoint | Purpose |
+|---|---|---|
+| GET | `/api/flights` | Retrieve flights |
+| GET | `/api/flights/search?source=Chennai&destination=Delhi` | Search flights |
+| POST | `/api/passengers` | Register a passenger |
+| GET | `/api/seats?flightId=1` | Retrieve seats for a flight |
+| POST | `/api/bookings/create` | Create a booking |
+| GET | `/api/bookings` | Retrieve booking history |
+| DELETE | `/api/bookings/{bookingId}` | Cancel a booking |
+
+The POST endpoints accept URL-encoded form data. The booking endpoint requires valid passenger, flight, and seat IDs.
+
 ## Project Structure
 
+```text
 AirlineReservationSystem/
-|-- src/
-|   `-- main/
-|       `-- java/
-|           |-- Main.java
-|           |-- model/
-|           |-- dao/
-|           |-- service/
-|           `-- util/
-|-- sql/
-|   `-- database.sql
-|-- pom.xml
-|-- README.md
-`-- .gitignore
+├── src/
+│   └── main/
+│       ├── java/
+│       │   ├── Main.java
+│       │   ├── WebServer.java
+│       │   ├── model/
+│       │   ├── dao/
+│       │   ├── service/
+│       │   └── util/
+│       └── resources/
+│           └── public/
+│               └── index.html
+├── sql/
+│   └── database.sql
+├── pom.xml
+├── .gitignore
+└── README.md
+```
 
-The `model`, `dao`, `service`, and `util` packages separate data models, database access, business operations, and utility functionality.
+The main packages are organized by responsibility:
 
-## Testing
+- `model` — represents application entities.
+- `dao` — handles database access.
+- `service` — contains business operations.
+- `util` — provides utility functionality, including database connectivity.
+- `WebServer.java` — handles HTTP requests and serves the web interface.
+- `src/main/resources/public/index.html` — contains the browser-based user interface.
+- `sql/database.sql` — contains the database schema.
 
-Test the application with valid and invalid inputs. Verify passenger registration, flight searching, seat availability, successful booking, viewing bookings, cancellation, and database updates.
+## Testing and Validation
 
-Use test records only, and confirm that cancelled bookings release seats and restore flight availability correctly.
+The project has successfully passed a Maven clean compilation. The web interface has also been exercised with flight retrieval, booking history, booking, and cancellation workflows.
 
-## Current Project Status
+For further validation, test the following scenarios:
 
-The core console workflows have been implemented and compiled successfully. Final validation, documentation review, and cleanup checks are part of the project completion process.
+1. Register a passenger using valid information.
+2. Search for flights using different source and destination values.
+3. View seats and verify their booking status.
+4. Book an available seat.
+5. Confirm that the booking appears in booking history.
+6. Cancel an eligible booking.
+7. Verify that the seat becomes available again.
+8. Try invalid IDs, missing fields, and unavailable seats.
+9. Confirm that database changes are reflected in the application.
+
+Use test data and verify database records when checking booking consistency. A successful compilation does not, by itself, establish that every workflow has passed testing.
+
+## Security and Configuration Notes
+
+- Do not commit database passwords or other secrets.
+- Configure credentials using environment variables.
+- Keep the local web server bound to the loopback address unless a properly secured deployment is planned.
+- Review SQL scripts before executing them against an existing database.
+- Use appropriate validation and database constraints to maintain data integrity.
 
 ## Future Enhancements
 
-- Flight creation and management through an administrative interface
-- Fare calculation and payment simulation
-- Improved input validation and user-friendly error messages
-- Automated unit and integration tests
-- A graphical user interface or web interface
+- Administrative flight creation and management.
+- Fare calculation and payment simulation.
+- Automated unit and integration tests.
+- Improved logging and error handling.
+- Enhanced accessibility and responsive interface design.
+- Deployment with appropriate authentication and security controls.
 
 ## Author
 
-Developed as an academic project to demonstrate Java programming, object-oriented design, collections, database connectivity, and Git-based version control.
+Developed as an academic project to demonstrate Java programming, object-oriented design, collections, JDBC, MySQL integration, HTTP request handling, and Git-based version control.
